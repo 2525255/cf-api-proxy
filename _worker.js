@@ -14,7 +14,7 @@ export default {
     });
     const jsonData = await res.json();
 
-    // 非浏览器访问，直接返回原始JSON
+    // 非浏览器访问直接返回JSON
     const ua = request.headers.get("user-agent") || "";
     const isBrowser = /Chrome|Firefox|Safari|Edge|Opera/i.test(ua);
     if (!isBrowser) {
@@ -72,7 +72,7 @@ export default {
           .line{display:flex;padding:15px 0;border-bottom:1px solid #f1f1f1;align-items:center}
           .line:last-child{border-bottom:none}
           .label{width:115px;color:#6b7280;font-weight:500;font-size:15px}
-          .value{flex:1;color:#111827;font-size:15px;word-break:break-all}
+          .hide-text{flex:1;color:#999;font-size:15px;letter-spacing:4px}
           .btn-wrap{display:flex;gap:14px;margin-top:32px}
           .copyBtn{flex:1;height:48px;border:none;border-radius:12px;color:#fff;font-size:16px;cursor:pointer;transition:0.2s}
           .btn-res{background:#2563eb;}
@@ -88,37 +88,44 @@ export default {
             <h1>资源中转页</h1>
             <div class="line">
               <div class="label">所属地区</div>
-              <div class="value">${area}</div>
+              <div class="hide-text">${area}</div>
             </div>
             <div class="line">
               <div class="label">资源</div>
-              <div class="value" id="resText">${resource}</div>
+              <div class="hide-text">******</div>
             </div>
             <div class="line">
               <div class="label">密钥</div>
-              <div class="value" id="secText">${secret}</div>
+              <div class="hide-text">******</div>
             </div>
             <div class="line">
               <div class="label">最后检测时间</div>
-              <div class="value">${checkTime}</div>
+              <div class="hide-text">${checkTime}</div>
             </div>
             <div class="btn-wrap">
               <button class="copyBtn btn-res" onclick="copyResource()">复制资源</button>
               <button class="copyBtn btn-sec" onclick="copySecret()">复制密钥</button>
             </div>
-            <p class="smallTip">点击对应按钮，单独复制内容</p>
+            <p class="smallTip">点击对应按钮一键复制对应内容</p>
           </div>
         </div>
         <script>
+          // 把真实内容存于JS变量，页面不展示明文
+          const realResource = "${resource}";
+          const realSecret = "${secret}";
           function copyResource(){
-            const text = document.getElementById('resText').innerText;
-            navigator.clipboard.writeText(text).then(()=>{alert("✅ 资源复制成功");})
-            .catch(()=>alert("❌ 复制失败，请手动选中文字复制"));
+            navigator.clipboard.writeText(realResource).then(()=>{
+              alert("✅ 资源复制成功");
+            }).catch(()=>{
+              alert("❌ 复制失败，可切换浏览器重试");
+            })
           }
           function copySecret(){
-            const text = document.getElementById('secText').innerText;
-            navigator.clipboard.writeText(text).then(()=>{alert("✅ 密钥复制成功");})
-            .catch(()=>alert("❌ 复制失败，请手动选中文字复制"));
+            navigator.clipboard.writeText(realSecret).then(()=>{
+              alert("✅ 密钥复制成功");
+            }).catch(()=>{
+              alert("❌ 复制失败，可切换浏览器重试");
+            })
           }
         </script>
       </body>
