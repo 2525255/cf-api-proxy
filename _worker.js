@@ -75,8 +75,8 @@ export default {
             <div class="hide-text">${checkTime}</div>
           </div>
           <div class="btn-wrap">
-            <button class="copyBtn btn-res" onclick="copyItem('${rid}')">复制资源</button>
-            <button class="copyBtn btn-sec" onclick="copyItem('${sid}')">复制密钥</button>
+            <button class="copyBtn btn-res" onclick="copyItem('${rid}','资源')">复制资源</button>
+            <button class="copyBtn btn-sec" onclick="copyItem('${sid}','密钥')">复制密钥</button>
           </div>
           <input type="hidden" id="${rid}" value="${resource}">
           <input type="hidden" id="${sid}" value="${secret}">
@@ -106,6 +106,38 @@ export default {
           .btn-sec{background:#0891b2;}
           .btn-sec:hover{background:#0e7490}
           .smallTip{text-align:center;margin-top:16px;font-size:13px;color:#9ca3af}
+          /* 自定义弹窗样式 */
+          .mask{
+            position:fixed;
+            left:0;top:0;
+            width:100%;height:100%;
+            background:rgba(0,0,0,0.3);
+            display:none;
+            justify-content:center;
+            align-items:center;
+            z-index:999;
+          }
+          .pop-box{
+            background:#fff;
+            padding:40px 35px;
+            border-radius:16px;
+            min-width:280px;
+            text-align:center;
+          }
+          .pop-text{
+            font-size:18px;
+            margin-bottom:30px;
+            color:#222;
+          }
+          .pop-btn{
+            padding:10px 36px;
+            border:none;
+            background:#2563eb;
+            color:#fff;
+            border-radius:99px;
+            font-size:16px;
+            cursor:pointer;
+          }
         </style>
       </head>
       <body>
@@ -116,13 +148,29 @@ export default {
             <p class="smallTip">点击对应按钮一键复制本组内容</p>
           </div>
         </div>
+        <!-- 自定义弹窗 -->
+        <div class="mask" id="popMask">
+          <div class="pop-box">
+            <div class="pop-text" id="popText"></div>
+            <button class="pop-btn" onclick="closePop()">确定</button>
+          </div>
+        </div>
         <script>
-          function copyItem(id){
+          const mask = document.getElementById('popMask');
+          const textDom = document.getElementById('popText');
+          function showPop(msg){
+            textDom.innerText = msg;
+            mask.style.display = 'flex';
+          }
+          function closePop(){
+            mask.style.display = 'none';
+          }
+          function copyItem(id,name){
             const val = document.getElementById(id).value;
             navigator.clipboard.writeText(val).then(()=>{
-              alert("✅ 复制成功");
+              showPop(name + "复制成功");
             }).catch(()=>{
-              alert("❌ 复制失败，更换浏览器重试");
+              showPop("复制失败，请更换浏览器重试");
             })
           }
         </script>
