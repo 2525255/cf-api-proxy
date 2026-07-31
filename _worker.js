@@ -14,7 +14,7 @@ export default {
     });
     const jsonData = await res.json();
 
-    // 接口访问返回完整JSON
+    // 非浏览器访问，返回完整原始JSON
     const ua = request.headers.get("user-agent") || "";
     const isBrowser = /Chrome|Firefox|Safari|Edge|Opera/i.test(ua);
     if (!isBrowser) {
@@ -26,7 +26,7 @@ export default {
       });
     }
 
-    // 空数据页面
+    // 空资源页面
     if (jsonData.ret !== 1 || !Array.isArray(jsonData.data) || jsonData.data.length === 0) {
       return new Response(`
       <html lang="zh-CN">
@@ -56,10 +56,10 @@ export default {
       });
     }
 
-    // 脱敏处理函数：取前3+***+后3
-    function maskText(str) {
-      if (!str || str.length <= 6) return "******";
-      return str.slice(0, 3) + "***" + str.slice(-3);
+    // 资源脱敏函数：前3位 + *** + 末尾2位
+    function maskResource(str) {
+      if (!str || str.length <= 5) return "******";
+      return str.slice(0, 3) + "***" + str.slice(-2);
     }
 
     let listHtml = "";
@@ -70,8 +70,9 @@ export default {
       const rid = `res${index}`;
       const sid = `sec${index}`;
 
-      const showRes = maskText(resource);
-      const showSec = maskText(secret);
+      const showRes = maskResource(resource);
+      // 密钥全程完全隐藏
+      const showSec = "******";
 
       listHtml += `
       <div style="margin-bottom:26px;padding-bottom:22px;border-bottom:1px solid #eee">
@@ -120,7 +121,7 @@ export default {
         .btn-sec{background:#0891b2;}
         .btn-sec:hover{background:#0e7490}
         .smallTip{text-align:center;margin-top:16px;font-size:13px;color:#9ca3af}
-        /* 自定义弹窗 */
+        /* 无域名自定义弹窗 */
         .mask{
           position:fixed;left:0;top:0;width:100%;height:100%;
           background:rgba(0,0,0,0.3);display:none;
