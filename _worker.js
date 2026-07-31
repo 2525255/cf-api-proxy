@@ -14,7 +14,7 @@ export default {
     });
     const jsonData = await res.json();
 
-    // 脚本调用直接返回完整JSON
+    // 非浏览器访问，原样返回完整JSON
     const ua = request.headers.get("user-agent") || "";
     const isBrowser = /Chrome|Firefox|Safari|Edge|Opera/i.test(ua);
     if (!isBrowser) {
@@ -52,22 +52,16 @@ export default {
       `;
     } else {
       let listHtml = "";
-      // 循环遍历所有账号，逐条渲染
       jsonData.data.forEach((item, index) => {
-        const area = item.region_display;
         const resource = item.username;
         const secret = item.password;
         const checkTime = item.last_check;
-        // 唯一id区分每条账号
         const rid = `res${index}`;
         const sid = `sec${index}`;
+
         listHtml += `
         <div style="margin-bottom:26px;padding-bottom:22px;border-bottom:1px solid #eee">
           <div style="font-weight:bold;margin-bottom:12px;color:#333">第${index+1}组资源</div>
-          <div class="line">
-            <div class="label">所属地区</div>
-            <div class="hide-text">${area}</div>
-          </div>
           <div class="line">
             <div class="label">资源</div>
             <div class="hide-text">******</div>
