@@ -1,6 +1,6 @@
 export default {
   async fetch(request, env) {
-    const API_KEY = "EdiHivmCxlMstUCrxusvYNxeNUdpCyQE";
+    const API_KEY = "kunAcYXyrlrVHreUIgZePnRHBNSpOROe";
     const shareId = "866";
 
     const targetUrl = new URL("https://10086id.com/client/getShareAccounts");
