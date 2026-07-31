@@ -14,7 +14,7 @@ export default {
     });
     const jsonData = await res.json();
 
-    // 判断：如果是程序接口请求，直接返回JSON；浏览器访问返回美化页面
+    // 非浏览器访问，直接返回原始JSON
     const ua = request.headers.get("user-agent") || "";
     const isBrowser = /Chrome|Firefox|Safari|Edge|Opera/i.test(ua);
     if (!isBrowser) {
@@ -26,7 +26,6 @@ export default {
       });
     }
 
-    // 浏览器访问：渲染美化页面
     let html = "";
     if (jsonData.ret !== 1 || !Array.isArray(jsonData.data) || jsonData.data.length === 0) {
       html = `
@@ -45,8 +44,8 @@ export default {
       </head>
       <body>
         <div class="box">
-          <h1>账号资源中转页</h1>
-          <p class="tip">暂无可用账号资源，请稍后刷新</p>
+          <h1>资源中转页</h1>
+          <p class="tip">暂无可用资源，请稍后刷新页面重试</p>
         </div>
       </body>
       </html>
@@ -54,8 +53,8 @@ export default {
     } else {
       const item = jsonData.data[0];
       const area = item.region_display;
-      const account = item.username;
-      const secretKey = item.password;
+      const resource = item.username;
+      const secret = item.password;
       const checkTime = item.last_check;
 
       html = `
@@ -63,7 +62,7 @@ export default {
       <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>账号资源中转页</title>
+        <title>资源中转页</title>
         <style>
           *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,"Microsoft YaHei"}
           body{background:#f5f7fa;padding:60px 16px}
@@ -74,45 +73,52 @@ export default {
           .line:last-child{border-bottom:none}
           .label{width:115px;color:#6b7280;font-weight:500;font-size:15px}
           .value{flex:1;color:#111827;font-size:15px;word-break:break-all}
-          .copyBtn{width:100%;height:48px;margin-top:32px;border:none;border-radius:12px;background:#2563eb;color:#fff;font-size:16px;cursor:pointer;transition:0.2s}
-          .copyBtn:hover{background:#1d4ed8}
-          .smallTip{text-align:center;margin-top:12px;font-size:13px;color:#9ca3af}
+          .btn-wrap{display:flex;gap:14px;margin-top:32px}
+          .copyBtn{flex:1;height:48px;border:none;border-radius:12px;color:#fff;font-size:16px;cursor:pointer;transition:0.2s}
+          .btn-res{background:#2563eb;}
+          .btn-res:hover{background:#1d4ed8}
+          .btn-sec{background:#0891b2;}
+          .btn-sec:hover{background:#0e7490}
+          .smallTip{text-align:center;margin-top:16px;font-size:13px;color:#9ca3af}
         </style>
       </head>
       <body>
         <div class="container">
           <div class="card">
-            <h1>账号资源中转页</h1>
+            <h1>资源中转页</h1>
             <div class="line">
               <div class="label">所属地区</div>
               <div class="value">${area}</div>
             </div>
             <div class="line">
-              <div class="label">资源账号</div>
-              <div class="value" id="acc">${account}</div>
+              <div class="label">资源</div>
+              <div class="value" id="resText">${resource}</div>
             </div>
             <div class="line">
               <div class="label">密钥</div>
-              <div class="value" id="key">${secretKey}</div>
+              <div class="value" id="secText">${secret}</div>
             </div>
             <div class="line">
               <div class="label">最后检测时间</div>
               <div class="value">${checkTime}</div>
             </div>
-            <button class="copyBtn" onclick="copyData()">一键复制【账号 | 密钥】</button>
-            <p class="smallTip">复制格式：资源账号 | 密钥</p>
+            <div class="btn-wrap">
+              <button class="copyBtn btn-res" onclick="copyResource()">复制资源</button>
+              <button class="copyBtn btn-sec" onclick="copySecret()">复制密钥</button>
+            </div>
+            <p class="smallTip">点击对应按钮，单独复制内容</p>
           </div>
         </div>
         <script>
-          function copyData(){
-            const acc = document.getElementById('acc').innerText;
-            const key = document.getElementById('key').innerText;
-            const text = acc + " | " + key;
-            navigator.clipboard.writeText(text).then(()=>{
-              alert("✅ 复制成功，可直接粘贴使用");
-            }).catch(()=>{
-              alert("❌ 复制失败，请手动框选文字复制");
-            })
+          function copyResource(){
+            const text = document.getElementById('resText').innerText;
+            navigator.clipboard.writeText(text).then(()=>{alert("✅ 资源复制成功");})
+            .catch(()=>alert("❌ 复制失败，请手动选中文字复制"));
+          }
+          function copySecret(){
+            const text = document.getElementById('secText').innerText;
+            navigator.clipboard.writeText(text).then(()=>{alert("✅ 密钥复制成功");})
+            .catch(()=>alert("❌ 复制失败，请手动选中文字复制"));
           }
         </script>
       </body>
