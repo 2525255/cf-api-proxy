@@ -33,7 +33,7 @@ export default {
       <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>资源中转页</title>
+        <title>资源宝库</title>
         <style>
           *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,"Microsoft YaHei"}
           body{background:#f5f7fa;padding:60px 20px}
@@ -44,7 +44,7 @@ export default {
       </head>
       <body>
         <div class="box">
-          <h1>资源中转页</h1>
+          <h1>资源宝库</h1>
           <p class="tip">暂无可用资源，请稍后刷新页面重试</p>
         </div>
       </body>
@@ -91,7 +91,7 @@ export default {
         </div>
         <div class="btn-wrap">
           <button class="copyBtn btn-res" onclick="copyItem('${rid}','资源')">复制资源</button>
-          <button class="copyBtn btn-sec" onclick="copyItem('${sid}','密钥')">复制密钥</button>
+          <button class="copyBtn btn-sec" onclick="copySecret('${sid}')">复制密钥</button>
         </div>
         <input type="hidden" id="${rid}" value="${resource}">
         <input type="hidden" id="${sid}" value="${secret}">
@@ -104,7 +104,7 @@ export default {
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>资源中转页</title>
+      <title>资源宝库</title>
       <style>
         *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,"Microsoft YaHei"}
         body{background:#f5f7fa;padding:60px 16px}
@@ -121,48 +121,105 @@ export default {
         .btn-sec{background:#0891b2;}
         .btn-sec:hover{background:#0e7490}
         .smallTip{text-align:center;margin-top:16px;font-size:13px;color:#9ca3af}
-        /* 无域名自定义弹窗 */
+        /* 弹窗通用样式 */
         .mask{
           position:fixed;left:0;top:0;width:100%;height:100%;
           background:rgba(0,0,0,0.3);display:none;
           justify-content:center;align-items:center;z-index:999;
         }
-        .pop-box{background:#fff;padding:40px 35px;border-radius:16px;min-width:280px;text-align:center;}
-        .pop-text{font-size:18px;margin-bottom:30px;color:#222;}
-        .pop-btn{padding:10px 36px;border:none;background:#2563eb;color:#fff;border-radius:99px;font-size:16px;cursor:pointer;}
+        .pop-box{background:#fff;padding:30px 35px;border-radius:16px;min-width:300px;text-align:center;}
+        .pop-text{font-size:17px;margin-bottom:20px;color:#222;line-height:1.6;}
+        .pop-input{width:100%;padding:12px 14px;border:1px solid #ddd;border-radius:10px;font-size:16px;margin-bottom:24px;outline:none;}
+        .pop-btn{padding:10px 32px;border:none;background:#2563eb;color:#fff;border-radius:99px;font-size:16px;cursor:pointer;margin:0 8px;}
+        .pop-cancel{background:#94a3b8;}
       </style>
     </head>
     <body>
       <div class="container">
         <div class="card">
-          <h1>资源中转页</h1>
+          <h1>资源宝库</h1>
           ${listHtml}
           <p class="smallTip">点击对应按钮一键复制本组完整内容</p>
         </div>
       </div>
-      <div class="mask" id="popMask">
+
+      <!-- 普通提示弹窗 -->
+      <div class="mask" id="tipMask">
         <div class="pop-box">
-          <div class="pop-text" id="popText"></div>
-          <button class="pop-btn" onclick="closePop()">确定</button>
+          <div class="pop-text" id="tipText"></div>
+          <button class="pop-btn" onclick="closeTip()">确定</button>
         </div>
       </div>
+
+      <!-- 密钥口令验证弹窗 -->
+      <div class="mask" id="pwdMask">
+        <div class="pop-box">
+          <div class="pop-text">小程序点击【实施工具交流】提取口令</div>
+          <input class="pop-input" id="pwdInput" placeholder="请输入提取口令" type="text">
+          <div>
+            <button class="pop-btn" onclick="checkPassword()">确认验证</button>
+            <button class="pop-btn pop-cancel" onclick="closePwdMask()">取消</button>
+          </div>
+        </div>
+      </div>
+
       <script>
-        const mask = document.getElementById('popMask');
-        const textDom = document.getElementById('popText');
-        function showPop(msg){
-          textDom.innerText = msg;
-          mask.style.display = 'flex';
+        // 弹窗控制
+        const tipMask = document.getElementById('tipMask');
+        const tipText = document.getElementById('tipText');
+        const pwdMask = document.getElementById('pwdMask');
+        const pwdInput = document.getElementById('pwdInput');
+        let waitingCopyId = "";
+        const correctPwd = "4536";// 密钥
+
+        // 提示弹窗
+        function showTip(msg){
+          tipText.innerText = msg;
+          tipMask.style.display = 'flex';
         }
-        function closePop(){
-          mask.style.display = 'none';
+        function closeTip(){
+          tipMask.style.display = 'none';
         }
+        // 口令弹窗
+        function openPwdMask(){
+          pwdInput.value = "";
+          pwdMask.style.display = 'flex';
+        }
+        function closePwdMask(){
+          pwdMask.style.display = 'none';
+        }
+
+        // 普通资源复制（无验证）
         function copyItem(id,name){
           const val = document.getElementById(id).value;
           navigator.clipboard.writeText(val).then(()=>{
-            showPop(name + "复制成功");
+            showTip(name + "复制成功");
           }).catch(()=>{
-            showPop("复制失败，请更换浏览器重试");
+            showTip("复制失败，请更换浏览器重试");
           })
+        }
+
+        // 密钥复制：打开口令弹窗，记录要复制的ID
+        function copySecret(secId){
+          waitingCopyId = secId;
+          openPwdMask();
+        }
+
+        // 口令校验
+        function checkPassword(){
+          const inputVal = pwdInput.value.trim();
+          if(inputVal === correctPwd){
+            closePwdMask();
+            // 验证通过，执行复制
+            const secretVal = document.getElementById(waitingCopyId).value;
+            navigator.clipboard.writeText(secretVal).then(()=>{
+              showTip("验证成功，密钥复制成功");
+            }).catch(()=>{
+              showTip("复制失败，请更换浏览器重试");
+            })
+          }else{
+            showTip("口令错误，请重新输入提取口令");
+          }
         }
       </script>
     </body>
