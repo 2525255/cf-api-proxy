@@ -151,11 +151,11 @@ export default {
         </div>
       </div>
 
-      <!-- 密钥口令验证弹窗 -->
+      <!-- 密钥口令验证弹窗，输入框改为password隐藏明文 -->
       <div class="mask" id="pwdMask">
         <div class="pop-box">
           <div class="pop-text">小程序点击【实施工具交流】提取口令</div>
-          <input class="pop-input" id="pwdInput" placeholder="请输入提取口令" type="text">
+          <input class="pop-input" id="pwdInput" placeholder="请输入提取口令" type="password" autocomplete="off">
           <div>
             <button class="pop-btn" onclick="checkPassword()">确认验证</button>
             <button class="pop-btn pop-cancel" onclick="closePwdMask()">取消</button>
