@@ -67,6 +67,7 @@ export default {
       const resource = item.username;
       const secret = item.password;
       const checkTime = item.last_check;
+      const region = item.region_display || "未知";
       const rid = `res${index}`;
       const sid = `sec${index}`;
 
@@ -76,6 +77,10 @@ export default {
       listHtml += `
       <div class="item-block">
         <div class="item-title">第${index+1}组资源</div>
+        <div class="line">
+          <div class="label">地区</div>
+          <div class="hide-text region-text">${region}</div>
+        </div>
         <div class="line">
           <div class="label">资源</div>
           <div class="hide-text">${showRes}</div>
@@ -173,6 +178,11 @@ export default {
           color:#334155;
           font-size:15px;
           letter-spacing:1px;
+        }
+        /* 地区高亮显示 */
+        .region-text{
+          color:#7c3aed;
+          font-weight:600;
         }
         .btn-wrap{
           display:flex;
