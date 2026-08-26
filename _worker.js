@@ -257,10 +257,113 @@ export default {
         }
         .pop-btn:hover{transform:translateY(-1px)}
         .pop-cancel{background:#94a3b8;}
+
+        /* ========== 今日数据码 验证层 ========== */
+        .code-mask{
+          position:fixed;left:0;top:0;width:100%;height:100%;
+          background:linear-gradient(135deg,#4f46e5 0%,#7c3aed 50%,#2563eb 100%);
+          display:flex;
+          justify-content:center;
+          align-items:center;
+          z-index:9999;
+        }
+        .code-card{
+          background:#fff;
+          padding:50px 44px;
+          border-radius:26px;
+          min-width:360px;
+          max-width:90vw;
+          text-align:center;
+          box-shadow:0 20px 60px rgba(0,0,0,0.25);
+        }
+        .code-icon{
+          width:72px;height:72px;margin:0 auto 22px;
+          border-radius:50%;
+          background:linear-gradient(135deg,#6366f1,#8b5cf6);
+          display:flex;justify-content:center;align-items:center;
+          font-size:36px;color:#fff;
+        }
+        .code-title{
+          font-size:24px;font-weight:700;color:#1e293b;margin-bottom:12px;
+          letter-spacing:1px;
+        }
+        .code-subtitle{
+          font-size:14px;color:#64748b;margin-bottom:10px;line-height:1.7;
+        }
+        .code-path{
+          background:#eef2ff;
+          border:1px solid #c7d2fe;
+          border-radius:12px;
+          padding:12px 14px;
+          margin-bottom:24px;
+          font-size:14px;color:#3730a3;
+          line-height:1.6;font-weight:500;
+        }
+        .code-input{
+          width:100%;
+          padding:15px 18px;
+          border:1.5px solid #e2e8f0;
+          border-radius:14px;
+          font-size:18px;
+          letter-spacing:6px;
+          text-align:center;
+          margin-bottom:22px;
+          outline:none;
+          transition:0.2s;
+          font-weight:600;
+        }
+        .code-input:focus{
+          border-color:#6366f1;
+          box-shadow:0 0 0 4px rgba(99,102,241,0.15);
+        }
+        .code-btn{
+          width:100%;
+          height:50px;
+          border:none;
+          background:linear-gradient(135deg,#6366f1,#8b5cf6);
+          color:#fff;
+          border-radius:14px;
+          font-size:17px;
+          font-weight:600;
+          cursor:pointer;
+          transition:all 0.25s ease;
+          letter-spacing:2px;
+        }
+        .code-btn:hover{
+          transform:translateY(-2px);
+          box-shadow:0 8px 20px rgba(99,102,241,0.35);
+        }
+        .code-error{
+          color:#dc2626;
+          font-size:14px;
+          margin-top:-16px;
+          margin-bottom:18px;
+          min-height:20px;
+          font-weight:500;
+        }
+        /* 验证通过前隐藏主内容（防F12直接看到） */
+        .main-hidden{display:none !important;}
       </style>
     </head>
     <body>
-      <div class="container">
+
+      <!-- ========== 今日数据码 验证层（最外层，必须先验证） ========== -->
+      <div class="code-mask" id="codeMask">
+        <div class="code-card">
+          <div class="code-icon">🔐</div>
+          <div class="code-title">今日数据码</div>
+          <div class="code-subtitle">请输入今日数据码后查看资源</div>
+          <div class="code-path">
+            获取路径：最新数据码已同步更新至网盘解压包中查看
+          </div>
+          <input class="code-input" id="codeInput" maxlength="8" placeholder="请输入数据码" inputmode="numeric" autocomplete="off">
+          <div class="code-error" id="codeError"></div>
+          <button class="code-btn" onclick="checkDataCode()">确 定</button>
+        </div>
+      </div>
+
+      <!-- ========== 主内容（验证通过前隐藏） ========== -->
+      <div class="container main-hidden" id="mainContainer">
         <div class="card">
           <h1>资源宝库</h1>
           <div class="notice-box">
@@ -279,7 +382,7 @@ export default {
         </div>
       </div>
 
-      <!-- 密钥口令验证弹窗，密码框隐藏明文 -->
+      <!-- 密钥口令验证弹窗 -->
       <div class="mask" id="pwdMask">
         <div class="pop-box">
           <div class="pop-text">小程序查看【实施工具交流】提取口令，添加为【我的小程序】自动识别下次更新免费</div>
@@ -292,7 +395,33 @@ export default {
       </div>
 
       <script>
-        // 弹窗控制
+        // ========== 今日数据码 ==========
+        const DATA_CODE = "8787";
+        const codeMask = document.getElementById('codeMask');
+        const codeInput = document.getElementById('codeInput');
+        const codeError = document.getElementById('codeError');
+        const mainContainer = document.getElementById('mainContainer');
+
+        // 自动聚焦输入框 + 支持回车确认
+        codeInput.focus();
+        codeInput.addEventListener('keydown', function(e){
+          if(e.key === 'Enter') checkDataCode();
+        });
+
+        function checkDataCode(){
+          const val = codeInput.value.trim();
+          if(val === DATA_CODE){
+            codeMask.style.display = 'none';
+            mainContainer.classList.remove('main-hidden');
+          }else{
+            codeError.innerText = '数据码错误，请重新输入';
+            codeInput.value = '';
+            codeInput.focus();
+            setTimeout(()=>{ codeError.innerText = ''; }, 3000);
+          }
+        }
+
+        // ========== 复制 / 密钥验证 ==========
         const tipMask = document.getElementById('tipMask');
         const tipText = document.getElementById('tipText');
         const pwdMask = document.getElementById('pwdMask');
