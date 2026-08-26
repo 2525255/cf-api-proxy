@@ -288,7 +288,7 @@ export default {
         const pwdMask = document.getElementById('pwdMask');
         const pwdInput = document.getElementById('pwdInput');
         let waitingCopyId = "";
-        const correctPwd = "55231";
+        const correctPwd = "85232";
 
         function showTip(msg){
           tipText.innerText = msg;
