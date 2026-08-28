@@ -385,7 +385,7 @@ export default {
       <!-- 密钥口令验证弹窗 -->
       <div class="mask" id="pwdMask">
         <div class="pop-box">
-          <div class="pop-text">小程序查看【实施工具交流】提取口令，添加为【我的小程序】自动识别下次更新免费</div>
+          <div class="pop-text">小程序查看【实施工具】提取口令，添加为【我的小程序】自动识别下次更新免费</div>
           <input class="pop-input" id="pwdInput" placeholder="请输入提取口令" type="password" autocomplete="off">
           <div>
             <button class="pop-btn" onclick="checkPassword()">确认验证</button>
@@ -396,7 +396,7 @@ export default {
 
       <script>
         // ========== 今日数据码 ==========
-        const DATA_CODE = "9896";
+        const DATA_CODE = "7852";
         const codeMask = document.getElementById('codeMask');
         const codeInput = document.getElementById('codeInput');
         const codeError = document.getElementById('codeError');
@@ -427,7 +427,7 @@ export default {
         const pwdMask = document.getElementById('pwdMask');
         const pwdInput = document.getElementById('pwdInput');
         let waitingCopyId = "";
-        const correctPwd = "741852";
+        const correctPwd = "666566";
 
         function showTip(msg){
           tipText.innerText = msg;
