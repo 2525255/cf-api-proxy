@@ -396,7 +396,7 @@ export default {
 
       <script>
         // ========== 今日数据码 ==========
-        const DATA_CODE = "7852";
+        const DATA_CODE = "7866";
         const codeMask = document.getElementById('codeMask');
         const codeInput = document.getElementById('codeInput');
         const codeError = document.getElementById('codeError');
@@ -427,7 +427,7 @@ export default {
         const pwdMask = document.getElementById('pwdMask');
         const pwdInput = document.getElementById('pwdInput');
         let waitingCopyId = "";
-        const correctPwd = "666566";
+        const correctPwd = "789456";
 
         function showTip(msg){
           tipText.innerText = msg;
