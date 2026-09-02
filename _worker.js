@@ -427,7 +427,7 @@ export default {
         const pwdMask = document.getElementById('pwdMask');
         const pwdInput = document.getElementById('pwdInput');
         let waitingCopyId = "";
-        const correctPwd = "789456"; // 压缩包及口令密钥修改入口
+        const correctPwd = "555878"; // 压缩包及口令密钥修改入口
 
         function showTip(msg){
           tipText.innerText = msg;
