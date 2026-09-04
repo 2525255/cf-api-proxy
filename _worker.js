@@ -396,7 +396,7 @@ export default {
 
       <script>
         // ========== 今日数据码 ==========
-        const DATA_CODE = "7755";  // 数据码修改入口
+        const DATA_CODE = "9988";  // 数据码修改入口
         const codeMask = document.getElementById('codeMask');
         const codeInput = document.getElementById('codeInput');
         const codeError = document.getElementById('codeError');
