@@ -396,7 +396,7 @@ export default {
 
       <script>
         // ========== 今日数据码 ==========
-        const DATA_CODE = "7577";  // 数据码修改入口
+        const DATA_CODE = "6612";  // 数据码修改入口
         const codeMask = document.getElementById('codeMask');
         const codeInput = document.getElementById('codeInput');
         const codeError = document.getElementById('codeError');
@@ -427,7 +427,7 @@ export default {
         const pwdMask = document.getElementById('pwdMask');
         const pwdInput = document.getElementById('pwdInput');
         let waitingCopyId = "";
-        const correctPwd = "778899"; // 压缩包及口令密钥修改入口
+        const correctPwd = "852852"; // 压缩包及口令密钥修改入口
 
         function showTip(msg){
           tipText.innerText = msg;
