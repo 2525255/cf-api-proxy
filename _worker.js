@@ -367,7 +367,7 @@ export default {
         <div class="card">
           <h1>资源宝库</h1>
           <div class="notice-box">
-            每10分钟自动获取最新资源，如获取失败请重新刷新页面并前往小程序再次获取口令！更新可联系卫星【iosgx8】你所需的我都有，全网最低。
+            每10分钟自动获取最新资源，如获取失败请重新刷新页面并前往小程序再次获取口令！
           </div>
           ${listHtml}
           <p class="smallTip">点击对应按钮一键复制本组完整内容</p>
